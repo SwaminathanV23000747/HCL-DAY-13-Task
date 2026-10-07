@@ -459,47 +459,86 @@ def tc07_drag_drop():
 # Task-9
 # code:
 ```
-def tc09_clickable_wait():
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+
+def get_driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    options.add_argument("--remote-allow-origins=*")
+    return webdriver.Chrome(options=options)
+
+
+def tc09_clickable_wait():
     driver = get_driver()
     wait = WebDriverWait(driver, 10)
 
     try:
+        print("\n[TC09] Clickable Wait - Checkout Place Order")
 
-        print("\n[TC09] Clickable Wait")
+        # 1. Open Website & Login
+        driver.get("https://www.saucedemo.com/")
+        time.sleep(3)
 
-        driver.get(
-            "https://the-internet.herokuapp.com/dynamic_controls"
+        driver.find_element(By.ID, "user-name").send_keys("standard_user")
+        time.sleep(3)
+        driver.find_element(By.ID, "password").send_keys("secret_sauce")
+        time.sleep(3)
+        driver.find_element(By.ID, "login-button").click()
+        time.sleep(3)
+
+        # 2. Add product & proceed through checkout
+        driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
+        time.sleep(3)
+        driver.find_element(By.CLASS_NAME, "shopping_cart_link").click()
+        time.sleep(3)
+        driver.find_element(By.ID, "checkout").click()
+        time.sleep(3)
+
+        driver.find_element(By.ID, "first-name").send_keys("John")
+        time.sleep(3)
+        driver.find_element(By.ID, "last-name").send_keys("Doe")
+        time.sleep(3)
+        driver.find_element(By.ID, "postal-code").send_keys("600001")
+        time.sleep(3)
+        driver.find_element(By.ID, "continue").click()
+        time.sleep(3)
+
+        # 3. Clickable Wait for Finish / Place Order button
+        place_order_button = wait.until(
+            EC.element_to_be_clickable((By.ID, "finish"))
         )
+        time.sleep(3)
+        place_order_button.click()
+        time.sleep(3)
 
-        enable_button = wait.until(
-            EC.element_to_be_clickable(
-                (By.XPATH, "//button[text()='Enable']")
-            )
+        # 4. Confirmation Message & Assertion
+        confirmation_header = wait.until(
+            EC.visibility_of_element_located((By.CLASS_NAME, "complete-header"))
         )
+        print(f"Header: {confirmation_header.text}")
 
-        enable_button.click()
-
-        input_field = wait.until(
-            EC.element_to_be_clickable(
-                (By.XPATH, "//input[@type='text']")
-            )
-        )
-
-        input_field.send_keys("Order Placed")
-
-        assert input_field.get_attribute(
-            "value"
-        ) == "Order Placed"
-
+        assert "Thank you for your order!" in confirmation_header.text
+        print("Order is submitted successfully")
         print("TC09 PASSED")
 
     finally:
-
+        time.sleep(3)
         driver.quit()
+
+
+if __name__ == "__main__":
+    tc09_clickable_wait()
 
 ```
 # output:
+<img width="1903" height="976" alt="Screenshot 2026-10-07 181706" src="https://github.com/user-attachments/assets/e98844d6-5abc-493a-9c96-52212d835bde" />
+<img width="1912" height="1015" alt="Screenshot 2026-10-07 181714" src="https://github.com/user-attachments/assets/98c42b88-2e31-4762-be8a-f9491870e4ee" />
+<img width="1900" height="1010" alt="Screenshot 2026-10-07 181720" src="https://github.com/user-attachments/assets/24532dd2-e3f5-41c1-a3af-cbe6de07ae93" />
 
 # Task-10:
 # code:
