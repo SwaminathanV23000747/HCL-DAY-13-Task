@@ -396,9 +396,67 @@ time.sleep(2)
 # Task-06:
 # code:
 ```
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+
+def get_driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    options.add_argument("--remote-allow-origins=*")
+    return webdriver.Chrome(options=options)
+
+
+def tc06_double_click():
+    driver = get_driver()
+    wait = WebDriverWait(driver, 10)
+    actions = ActionChains(driver)
+
+    try:
+        print("\n[TC06] Customer double-clicks a product / button")
+
+        # 1. Open the ToolsQA Buttons page
+        driver.get("https://demoqa.com/buttons")
+        time.sleep(3)
+
+        # 2. Locate the "Double Click Me" button
+        double_click_btn = wait.until(
+            EC.element_to_be_clickable((By.ID, "doubleClickBtn"))
+        )
+
+        # Scroll button into view to avoid any ad banners blocking it
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", double_click_btn)
+        time.sleep(3)
+
+        # 3. Perform the double-click action using ActionChains
+        print("Performing double-click on 'Double Click Me' button...")
+        actions.double_click(double_click_btn).perform()
+        time.sleep(3)
+
+        # 4. Wait for and verify the dynamic confirmation message
+        message = wait.until(
+            EC.visibility_of_element_located((By.ID, "doubleClickMessage"))
+        )
+        print(f"Confirmation Message: {message.text}")
+
+        assert "You have done a double click" in message.text
+        print("Product/button double-clicked successfully")
+        print("TC06 PASSED")
+
+    finally:
+        time.sleep(3)
+        driver.quit()
+
+
+if __name__ == "__main__":
+    tc06_double_click()
 ```
 # output:
+<img width="1906" height="1030" alt="image" src="https://github.com/user-attachments/assets/320fa7bd-9a0d-4c66-88b3-912eb3d7b8b4" />
 
 # Task -7:
 # code:
