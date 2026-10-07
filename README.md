@@ -232,8 +232,10 @@ time.sleep(4)
 #  output:
 <img width="1915" height="1018" alt="image" src="https://github.com/user-attachments/assets/1a1a98d6-5dd0-4dcf-b1fd-81cae09f107a" />
 <img width="1901" height="1026" alt="image" src="https://github.com/user-attachments/assets/21c8bbbb-f44d-4f5d-b4fd-9a0b1f47d607" />
-# Task -04;
-# code;
+
+# Task -04:
+
+# code:
 ```
 import time
 from selenium import webdriver
