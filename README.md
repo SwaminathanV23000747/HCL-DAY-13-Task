@@ -392,6 +392,7 @@ time.sleep(2)
 ```
 # output:
 <img width="1907" height="1012" alt="image" src="https://github.com/user-attachments/assets/7735c942-a1ef-4b70-8b04-11d10259fc49" />
+
 # Task-06:
 # code:
 ```
@@ -402,7 +403,182 @@ time.sleep(2)
 # Task -7:
 # code:
 ```
+def tc07_drag_drop():
+
+    driver = get_driver()
+    wait = WebDriverWait(driver, 10)
+
+    try:
+
+        print("\n[TC07] Drag and Drop")
+
+        driver.get(
+            "https://jqueryui.com/resources/demos/droppable/default.html"
+        )
+
+        source = wait.until(
+            EC.presence_of_element_located(
+                (By.ID, "draggable")
+            )
+        )
+
+        target = wait.until(
+            EC.presence_of_element_located(
+                (By.ID, "droppable")
+            )
+        )
+
+        ActionChains(driver).drag_and_drop(
+            source,
+            target
+        ).perform()
+
+        wait.until(
+            lambda d: "Dropped!" in target.text
+        )
+
+        assert "Dropped!" in target.text
+
+        print("TC07 PASSED")
+
+    finally:
+
+        driver.quit()
+
+```
+# output:
+<img width="1061" height="467" alt="image" src="https://github.com/user-attachments/assets/0b9948d6-5e54-482d-8bf1-6c79d8a009da" />
+<img width="1037" height="531" alt="image" src="https://github.com/user-attachments/assets/67e8b534-07e7-4a0a-8389-93a65398aeb7" />
+
+# Task-08:
+# code:
+```
+```
+# output:
+
+# Task-9
+# code:
+```
+def tc09_clickable_wait():
+
+    driver = get_driver()
+    wait = WebDriverWait(driver, 10)
+
+    try:
+
+        print("\n[TC09] Clickable Wait")
+
+        driver.get(
+            "https://the-internet.herokuapp.com/dynamic_controls"
+        )
+
+        enable_button = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//button[text()='Enable']")
+            )
+        )
+
+        enable_button.click()
+
+        input_field = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//input[@type='text']")
+            )
+        )
+
+        input_field.send_keys("Order Placed")
+
+        assert input_field.get_attribute(
+            "value"
+        ) == "Order Placed"
+
+        print("TC09 PASSED")
+
+    finally:
+
+        driver.quit()
 
 ```
 # output:
 
+# Task-10:
+# code:
+```
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Initialize Chrome WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver.maximize_window()
+wait = WebDriverWait(driver, 10)
+
+def close_ad_if_present(driver):
+    """Detects and closes Google Vignette ads or ad overlays if present."""
+    time.sleep(1)
+    try:
+        iframes = driver.find_elements(By.TAG_NAME, "iframe")
+        for iframe in iframes:
+            if "google_ads" in iframe.get_attribute("id") or "aswift" in iframe.get_attribute("id"):
+                driver.switch_to.frame(iframe)
+                try:
+                    dismiss_btn = driver.find_element(By.XPATH, "//div[@id='dismiss-button'] | //span[text()='Close']")
+                    dismiss_btn.click()
+                except NoSuchElementException:
+                    pass
+                driver.switch_to.default_content()
+    except Exception:
+        driver.switch_to.default_content()
+
+    if "google_vignette" in driver.current_url:
+        driver.back()
+        time.sleep(1)
+
+# 1. Open the Alerts demo page
+driver.get("https://demo.automationtesting.in/Alerts.html")
+time.sleep(2)
+close_ad_if_present(driver)
+
+# ------------------------------------------------
+# Step 1: Click "Alert with Textbox" menu tab
+# ------------------------------------------------
+print("Clicking 'Alert with Textbox' tab...")
+textbox_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(),'Alert with Textbox')]")))
+textbox_tab.click()
+
+close_ad_if_present(driver)
+time.sleep(1.5)
+
+# ------------------------------------------------
+# Step 2: Click "click the button to demonstrate the prompt box"
+# ------------------------------------------------
+print("Completing purchase: Clicking trigger button...")
+prompt_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'btn-info')]")))
+prompt_button.click()
+
+# ------------------------------------------------
+# Step 3: Wait for order confirmation popup and handle alert
+# ------------------------------------------------
+# Wait for alert to appear
+alert = wait.until(EC.alert_is_present())
+
+print("\nConfirmation Alert:")
+print(alert.text)
+time.sleep(1.5)  # Observe popup
+
+# Accept the confirmation alert
+alert.accept()
+
+# Required Output
+print("Confirmation alert is handled successfully")
+
+time.sleep(2)
+# driver.quit()
+```
+# output:
+<img width="1916" height="1023" alt="image" src="https://github.com/user-attachments/assets/6c8de0b1-6edc-4b64-954c-894f57870ed6" />
