@@ -289,14 +289,14 @@ print("Clicking login button...")
 login_button.click()
 time.sleep(2)
 
-# Output confirmation message
+#Output confirmation message
 if "inventory.html" in driver.current_url:
     print(f"Automated Login Successful! Logged in as: {username}")
 else:
     print("Login failed.")
 
 # ------------------------------------------------
-# TC04: Prompt with Dummy Discount Code & Success Box
+#TC04: Prompt with Dummy Discount Code & Success Box
 # ------------------------------------------------
 print("\n--- Running TC04 ---")
 
@@ -396,9 +396,11 @@ time.sleep(2)
 
 ```
 # output:
+
 # Task -7:
 # code:
 ```
+
 ```
 # output:
 
