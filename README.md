@@ -232,3 +232,173 @@ time.sleep(4)
 #  output:
 <img width="1915" height="1018" alt="image" src="https://github.com/user-attachments/assets/1a1a98d6-5dd0-4dcf-b1fd-81cae09f107a" />
 <img width="1901" height="1026" alt="image" src="https://github.com/user-attachments/assets/21c8bbbb-f44d-4f5d-b4fd-9a0b1f47d607" />
+# Task -04;
+# code;
+```
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Initialize Chrome WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# Maximize window so everything is clearly visible
+driver.maximize_window()
+wait = WebDriverWait(driver, 10)
+
+# ------------------------------------------------
+# Task 1: Open the online shopping website
+# ------------------------------------------------
+print("Opening website...")
+driver.get("https://www.saucedemo.com/")
+print("Shopping website opens successfully")
+time.sleep(2)
+
+# ------------------------------------------------
+# Task 2: Extract credentials and perform automated login
+# ------------------------------------------------
+print("Scraping credentials from page...")
+credentials_text = driver.find_element(By.ID, "login_credentials").text
+username = credentials_text.split("\n")[1]  # 'standard_user'
+
+password_text = driver.find_element(By.CLASS_NAME, "login_password").text
+password = password_text.split("\n")[1]  # 'secret_sauce'
+time.sleep(1)
+
+# Locate input elements
+username_input = driver.find_element(By.ID, "user-name")
+password_input = driver.find_element(By.ID, "password")
+login_button = driver.find_element(By.ID, "login-button")
+
+# Enter username
+print(f"Entering username: {username}")
+username_input.send_keys(username)
+time.sleep(1.5)
+
+# Enter password
+print("Entering password...")
+password_input.send_keys(password)
+time.sleep(1.5)
+
+# Click login
+print("Clicking login button...")
+login_button.click()
+time.sleep(2)
+
+# Output confirmation message
+if "inventory.html" in driver.current_url:
+    print(f"Automated Login Successful! Logged in as: {username}")
+else:
+    print("Login failed.")
+
+# ------------------------------------------------
+# TC04: Prompt with Dummy Discount Code & Success Box
+# ------------------------------------------------
+print("\n--- Running TC04 ---")
+
+# Define dummy discount coupon code
+dummy_discount_code = "SAVE50OFF"
+
+print("Displaying prompt popup with dummy discount code...")
+# Triggers prompt and stores the returned coupon code globally
+driver.execute_script(f"""
+    window.appliedCoupon = window.prompt('Enter your discount coupon code:', '{dummy_discount_code}');
+""")
+time.sleep(1)
+
+# Switch to the prompt alert
+alert = wait.until(EC.alert_is_present())
+
+# Type/override the dummy discount code using send_keys
+print(f"Entering dummy coupon code: {dummy_discount_code}")
+alert.send_keys(dummy_discount_code)
+time.sleep(2)  # Pause to observe the dummy code in the prompt
+
+# Accept (submit) the prompt popup
+alert.accept()
+
+# Console output requirement
+print("Entered information is submitted successfully")
+
+# Create a visible success message banner directly on the webpage
+driver.execute_script("""
+    const successBox = document.createElement('div');
+    successBox.id = 'coupon-success-box';
+    successBox.innerText = 'Coupon ' + window.appliedCoupon + ' applied! Entered information is submitted successfully.';
+    successBox.style.cssText = 'position: fixed; top: 20px; right: 20px; background-color: #4BB543; color: white; padding: 16px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 99999;';
+    document.body.appendChild(successBox);
+""")
+
+# Wait and retrieve the message from the rendered webpage output box
+success_element = wait.until(EC.visibility_of_element_located((By.ID, "coupon-success-box")))
+print(f"Webpage Output Box: {success_element.text}")
+
+time.sleep(3)  # Keep open to observe the green success banner
+# driver.quit()
+```
+# output:
+<img width="1917" height="1027" alt="image" src="https://github.com/user-attachments/assets/1471c3b5-75b9-4d3e-a598-76c9e7809c40" />
+<img width="1917" height="961" alt="image" src="https://github.com/user-attachments/assets/ec3e27e4-09d1-4417-93ed-ca1d382021d0" />
+
+# task 5:
+# code:
+```
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Initialize Chrome WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver.maximize_window()
+wait = WebDriverWait(driver, 10)
+actions = ActionChains(driver)
+
+# Open SauceDemo and log in
+driver.get("https://www.saucedemo.com/")
+driver.find_element(By.ID, "user-name").send_keys("standard_user")
+driver.find_element(By.ID, "password").send_keys("secret_sauce")
+driver.find_element(By.ID, "login-button").click()
+time.sleep(2)
+
+# ------------------------------------------------
+# Task 5: Customer moves mouse over Product / Category menu
+# ActionChains - move_to_element()
+# ------------------------------------------------
+print("\n--- Running Task 5: Mouse Hover ---")
+
+# Locate the first product item / title
+product_item = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "inventory_item_name")))
+
+# Perform Mouse Hover
+actions.move_to_element(product_item).perform()
+time.sleep(2)  # Pause to observe the hover state
+
+# Output requirement
+print("Product categories/submenu are displayed")
+
+time.sleep(2)
+# driver.quit()
+```
+# output:
+<img width="1907" height="1012" alt="image" src="https://github.com/user-attachments/assets/7735c942-a1ef-4b70-8b04-11d10259fc49" />
+# Task-06:
+# code:
+```
+
+```
+# output:
+# Task -7:
+# code:
+```
+```
+# output:
+
