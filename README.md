@@ -453,8 +453,80 @@ def tc07_drag_drop():
 # Task-08:
 # code:
 ```
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+def get_driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    options.add_argument("--remote-allow-origins=*")
+    return webdriver.Chrome(options=options)
+
+
+def tc08_search_product_saucedemo():
+    driver = get_driver()
+    wait = WebDriverWait(driver, 10)
+
+    try:
+        print("\n[TC08] Customer searches for a product on SauceDemo")
+
+        # 1. Open Website & Log In
+        print("Opening website...")
+        driver.get("https://www.saucedemo.com/")
+        time.sleep(3)
+
+        print("Entering credentials...")
+        driver.find_element(By.ID, "user-name").send_keys("standard_user")
+        time.sleep(3)
+        driver.find_element(By.ID, "password").send_keys("secret_sauce")
+        time.sleep(3)
+        driver.find_element(By.ID, "login-button").click()
+        time.sleep(3)
+
+        # 2. Define the product to search
+        search_keyword = "Backpack"
+        print(f"Searching for product matching: '{search_keyword}'...")
+
+        # 3. Explicit Wait: wait until product items load on the page
+        product_elements = wait.until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "inventory_item"))
+        )
+        time.sleep(3)
+
+        # 4. Search and match product by name
+        found_product = None
+        for product in product_elements:
+            name = product.find_element(By.CLASS_NAME, "inventory_item_name").text
+            if search_keyword.lower() in name.lower():
+                found_product = product
+                print(f"Match found: {name}")
+                break
+
+        # 5. Verify product was found
+        assert found_product is not None, f"No product matched '{search_keyword}'"
+
+        # Highlight/scroll to the searched product
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", found_product)
+        time.sleep(3)
+
+        # 6. Output confirmation
+        print("Product results are loaded successfully")
+        print("TC08 PASSED")
+
+    finally:
+        time.sleep(3)
+        driver.quit()
+
+
+if __name__ == "__main__":
+    tc08_search_product_saucedemo()
 ```
 # output:
+<img width="1897" height="967" alt="image" src="https://github.com/user-attachments/assets/dca26c7d-c74c-4602-91d1-4ce483c03711" />
 
 # Task-9
 # code:
